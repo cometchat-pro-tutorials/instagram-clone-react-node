@@ -30,4 +30,43 @@ module.exports = function ({ app, dbConn, upload }) {
       }
     }
   });
+
+  app.post('/users/followers', (req, res) => {
+    const { numberOfFollowers, id } = req.body;
+    const updateNumberOfFollowersSql = "UPDATE user_account SET user_number_of_followers = ? WHERE id = ?";
+    dbConn.query(updateNumberOfFollowersSql, [numberOfFollowers, id], function (err, updatedUser) {
+      if (err) {
+        res.status(200).jsonp({ message: "The system error. Please try again" });
+      } else if (updatedUser) {
+        res.status(200).jsonp({ id });
+      }
+    });
+  });
+
+  app.post('/users/posts', (req, res) => {
+    const { numberOfPosts, id } = req.body;
+    const updateNumberOfPostsSql = "UPDATE user_account SET user_number_of_posts = ? WHERE id = ?";
+    dbConn.query(updateNumberOfPostsSql, [numberOfPosts, id], function (err, updatedUser) {
+      if (err) {
+        res.status(200).jsonp({ message: "The system error. Please try again" });
+      } else if (updatedUser) {
+        res.status(200).jsonp({ id });
+      }
+    });
+  });
+
+  app.get('/users/:id', (req, res) => {
+    const userId = req.params.id;
+    if (!userId) { 
+      res.status(200).jsonp({ message: 'Cannot load user information, please try again' });
+    }
+    const getUserSql = "SELECT * FROM user_account WHERE id = ?";
+    dbConn.query(getUserSql, [userId], function (error, response) {
+      if (response && response.length) {
+        res.status(200).jsonp(response);
+      } else {
+        res.status(200).jsonp({ message: 'Cannot load user information, please try again' });
+      }
+    });
+  });
 }

@@ -1,7 +1,7 @@
 const authRoutes = require("./auth");
 const userRoutes = require("./users");
 const followerRoutes = require("./followers");
-const notificationRoutes = require("./notifcations");
+const notificationRoutes = require("./notifications");
 const postRoutes = require("./posts");
 const reactionRoutes = require("./reactions");
 

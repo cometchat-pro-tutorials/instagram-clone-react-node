@@ -10,7 +10,7 @@ const Create = (props) => {
   const [postImage, setPostImage] = useState(null);
   const [uploadedPostImage, setUploadedPostImage] = useState(null);
 
-  const { user, setIsLoading } = useContext(Context);
+  const { user, setIsLoading, setHasNewPost } = useContext(Context);
 
   const uploadPostImage = (e) => {
     const reader = new FileReader();
@@ -21,6 +21,11 @@ const Create = (props) => {
     reader.onload = (readerEvent) => {
       setPostImage(readerEvent.target.result);
     };
+  };
+
+  const updateNumberOfPosts = async () => {
+    const url = 'http://localhost:8080/users/posts';
+    return await axios.post(url, { id: user.id, numberOfPosts: user.user_number_of_posts ? user.user_number_of_posts + 1 : 1 });
   };
 
   const createFormData = () => {
@@ -42,6 +47,8 @@ const Create = (props) => {
     if (response && response.data && response.data.message) { 
       alert(response.data.message);
     } else {
+      await updateNumberOfPosts();
+      setHasNewPost(true);
       alert('Your post was uploaded successfully');
     }
     setIsLoading(false);

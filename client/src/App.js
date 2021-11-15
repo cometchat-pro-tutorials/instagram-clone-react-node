@@ -8,6 +8,10 @@ import {
 
 import Login from './components/login/Login';
 import Home from './components/home/Home';
+import Share from './components/post/Share';
+import Profile from './components/profile/Profile';
+import Notifications from './components/notification/Notifications';
+import Chat from './components/chat/Chat';
 import Loading from './components/common/Loading';
 import PrivateRoute from './components/common/PrivateRoute';
 
@@ -19,12 +23,24 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [cometChat, setCometChat] = useState(null);
-  const [posts, setPosts] = useState(null);
+  const [hasNewPost, setHasNewPost] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(false);
 
   useEffect(() => {
     initAuthUser();
     initCometChat();
   }, []);
+
+  useEffect(() => {
+    if (cometChat && user) { 
+      listenCustomMessages();
+    }
+    return () => {
+      if (cometChat && user) {
+        cometChat.removeMessageListener(user.id);
+      }
+    }
+  }, [cometChat, user]);
 
   const initAuthUser = () => {
     const authenticatedUser = localStorage.getItem('auth');
@@ -45,13 +61,32 @@ function App() {
       error => {
       }
     );
-  }
+  };
+
+  const listenCustomMessages = () => {
+    cometChat.addMessageListener(
+      user.id,
+      new cometChat.MessageListener({
+        onCustomMessageReceived: customMessage => {
+          if (customMessage && customMessage.sender && customMessage.sender.uid && customMessage.sender.uid !== user.id && customMessage.data && customMessage.data.customData && customMessage.data.customData.message) {
+            if (customMessage && customMessage.type && customMessage.type === 'notification') {
+              alert(customMessage.data.customData.message);
+            }
+          }
+        }
+      })
+    );
+  };
 
   return (
-    <Context.Provider value={{ isLoading, setIsLoading, user, setUser, cometChat, posts, setPosts }}>
+    <Context.Provider value={{ isLoading, setIsLoading, user, setUser, cometChat, hasNewPost, setHasNewPost, selectedPost, setSelectedPost }}>
       <Router>
         <Switch>
           <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/post/:id" component={Share} />
+          <PrivateRoute exact path="/profile/:id" component={Profile} />
+          <PrivateRoute exact path="/notifications" component={Notifications} />
+          <PrivateRoute exact path="/chat" component={Chat} />
           <Route exact path="/login">
             <Login />
           </Route>
