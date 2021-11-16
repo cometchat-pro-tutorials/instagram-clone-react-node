@@ -112,7 +112,7 @@ const Profile = (props) => {
 
   const removeFollow = async () => {
     const url = 'http://localhost:8080/followers/delete';
-    return await axios.post(url, { followerId: userProfile.id, userId: user.id });
+    return await axios.post(url, { followerId: user.id, userId: userProfile.id });
   };
 
   const updateNumberOfFollowers = async (numberOfFollowers) => {
@@ -122,7 +122,7 @@ const Profile = (props) => {
 
   const follow = async () => {
     const url = 'http://localhost:8080/followers/create';
-    return await axios.post(url, { followerId: userProfile.id, userId: user.id });
+    return await axios.post(url, { followerId: user.id, userId: userProfile.id });
   };
 
   const onFollowClicked = async () => {

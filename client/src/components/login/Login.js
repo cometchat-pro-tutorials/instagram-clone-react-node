@@ -70,7 +70,7 @@ const Login = (props) => {
         <div className="login__logo">
           <img src='https://assets-global.website-files.com/5f3c19f18169b65d9d0bf384/5f3c19f18169b655820bf3d4_asset%2021.svg' alt='logo'/>
         </div>
-        <p>Build Instagram Clone with React</p>
+        <p>Build Instagram Clone with React & Node</p>
       </div>
       <div className="login__form-container">
         <div className="login__form">

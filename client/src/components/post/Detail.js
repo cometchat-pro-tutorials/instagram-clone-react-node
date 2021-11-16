@@ -112,7 +112,7 @@ const Detail = (props) => {
 
   const removeFollow = async () => {
     const url = 'http://localhost:8080/followers/delete';
-    return await axios.post(url, { followerId: post.post_created_by, userId: user.id });
+    return await axios.post(url, { followerId: user.id, userId: post.post_created_by });
   };
 
   const updateNumberOfFollowers = async (numberOfFollowers) => {
