@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback} from "react";
 import axios from "axios";
 import { useHistory } from 'react-router-dom';
 import Context from '../../context';
@@ -12,13 +12,16 @@ const Detail = (props) => {
 
   const history = useHistory();
 
-  useEffect(async () => {
-    if (selectedPost) {
-      await loadPost();
-    }
-  }, [selectedPost]);
+  let loadPost = null;
+  let loadPostReaction = null;
 
-  const loadPost = async () => {
+  useEffect(() => {
+    if (selectedPost) {
+      loadPost();
+    }
+  }, [selectedPost, loadPost]);
+
+  loadPost = useCallback(async () => {
     if (!selectedPost) {
       return;
     }
@@ -39,9 +42,9 @@ const Detail = (props) => {
       setIsLoading(false);
     }
 
-  };
+  }, [loadPostReaction, setIsLoading, selectedPost]);
 
-  const loadPostReaction = async () => {
+  loadPostReaction = async () => {
     const userId = user.id;
     const postId = selectedPost.id;
     if (!userId || !postId) {
@@ -92,15 +95,8 @@ const Detail = (props) => {
     const receiverID = receiverId;
     const customType = type;
     const receiverType = cometChat.RECEIVER_TYPE.USER;
-    const customData = {
-      message
-    };
-    const customMessage = new cometChat.CustomMessage(
-      receiverID,
-      receiverType,
-      customType,
-      customData
-    );
+    const customData = { message };
+    const customMessage = new cometChat.CustomMessage(receiverID, receiverType, customType, customData);
 
     cometChat.sendCustomMessage(customMessage).then(
       message => {
@@ -133,11 +129,7 @@ const Detail = (props) => {
       } else {
         await follow();
         await updateNumberOfFollowers(post.user_number_of_followers ? post.user_number_of_followers + 1 : 1);
-        const customMessage = {
-          message: `${user.user_full_name} has followed you`,
-          type: 'notification',
-          receiverId: post.post_created_by
-        };
+        const customMessage = { message: `${user.user_full_name} has followed you`, type: 'notification', receiverId: post.post_created_by };
         sendCustomMessage(customMessage);
         await createNotification(customMessage.message);
       }
@@ -175,11 +167,7 @@ const Detail = (props) => {
       } else {
         await like();
         await updateNumberOfReactions(post.post_number_of_reactions ? post.post_number_of_reactions + 1 : 1);
-        const customMessage = {
-          message: `${user.user_full_name} has liked your post`,
-          type: 'notification',
-          receiverId: post.post_created_by
-        };
+        const customMessage = { message: `${user.user_full_name} has liked your post`, type: 'notification', receiverId: post.post_created_by };
         sendCustomMessage(customMessage);
         await createNotification(customMessage.message);
       }

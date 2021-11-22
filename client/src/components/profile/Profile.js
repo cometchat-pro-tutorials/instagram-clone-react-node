@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import Header from '../common/Header';
 import UserProfile from './UserProfile';
@@ -7,26 +7,32 @@ import Posts from '../post/Posts';
 import Context from '../../context';
 
 const Profile = (props) => {
+  const params = props.match.params;
+
   const [userProfile, setUserProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [selectedAction, setSelectedAction] = useState(1);
 
   const { cometChat, user, setIsLoading, hasNewPost, setHasNewPost } = useContext(Context);
 
+  let loadUser = null;
+  let loadPosts = null;
+  let loadUserFollower = null;
+
   useEffect(() => {
     loadUser();
     loadPosts(selectedAction);
-  }, []);
+  }, [loadUser, loadPosts, selectedAction]);
 
   useEffect(() => {
     if (hasNewPost) {
       loadPosts(selectedAction);
       setHasNewPost(false);
     }
-  }, [hasNewPost]);
+  }, [hasNewPost, loadPosts, selectedAction, setHasNewPost]);
 
-  const loadUserFollower = async () => {
-    const userId = props.match.params.id;
+  loadUserFollower = useCallback(async () => {
+    const userId = params.id;
     if (!user.id || !userId) {
       return;
     }
@@ -39,11 +45,11 @@ const Profile = (props) => {
     } catch (error) {
       setIsLoading(false);
     }
-  };
+  }, [params, setIsLoading, user]);
 
-  const loadUser = async () => {
+  loadUser = useCallback(async () => {
     try {
-      const userId = props.match.params.id;
+      const userId = params.id;
       if (!userId) {
         return;
       }
@@ -60,11 +66,11 @@ const Profile = (props) => {
     } catch (error) {
       setIsLoading(false);
     }
-  };
+  }, [setIsLoading, params, loadUserFollower]);
 
-  const loadPosts = async (postCategory) => {
+  loadPosts = useCallback(async (postCategory) => {
     try {
-      const userId = props.match.params.id;
+      const userId = params.id;
       if (!userId) {
         return;
       }
@@ -76,7 +82,7 @@ const Profile = (props) => {
     } catch (error) {
       setIsLoading(false);
     }
-  };
+  }, [params, setIsLoading]);
 
   const onItemClicked = (selectedAction) => {
     loadPosts(selectedAction);
@@ -87,16 +93,8 @@ const Profile = (props) => {
     const receiverID = receiverId;
     const customType = type;
     const receiverType = cometChat.RECEIVER_TYPE.USER;
-    const customData = {
-      message
-    };
-    const customMessage = new cometChat.CustomMessage(
-      receiverID,
-      receiverType,
-      customType,
-      customData
-    );
-
+    const customData = { message };
+    const customMessage = new cometChat.CustomMessage(receiverID, receiverType, customType, customData);
     cometChat.sendCustomMessage(customMessage).then(
       message => {
       },
@@ -133,11 +131,7 @@ const Profile = (props) => {
       } else {
         await follow();
         await updateNumberOfFollowers(userProfile.user_number_of_followers ? userProfile.user_number_of_followers + 1 : 1);
-        const customMessage = {
-          message: `${user.user_full_name} has followed you`,
-          type: 'notification',
-          receiverId: userProfile.id
-        };
+        const customMessage = { message: `${user.user_full_name} has followed you`, type: 'notification', receiverId: userProfile.id };
         sendCustomMessage(customMessage);
         await createNotification(customMessage.message);
       }

@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
-
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './components/login/Login';
 import Home from './components/home/Home';
 import Share from './components/post/Share';
@@ -14,9 +8,7 @@ import Notifications from './components/notification/Notifications';
 import Chat from './components/chat/Chat';
 import Loading from './components/common/Loading';
 import PrivateRoute from './components/common/PrivateRoute';
-
 import Context from './context';
-
 import './index.css';
 
 function App() {
@@ -25,6 +17,8 @@ function App() {
   const [cometChat, setCometChat] = useState(null);
   const [hasNewPost, setHasNewPost] = useState(false);
   const [selectedPost, setSelectedPost] = useState(false);
+
+  let listenCustomMessages = null;
 
   useEffect(() => {
     initAuthUser();
@@ -40,7 +34,7 @@ function App() {
         cometChat.removeMessageListener(user.id);
       }
     }
-  }, [cometChat, user]);
+  }, [cometChat, user, listenCustomMessages]);
 
   const initAuthUser = () => {
     const authenticatedUser = localStorage.getItem('auth');
@@ -63,7 +57,7 @@ function App() {
     );
   };
 
-  const listenCustomMessages = () => {
+  listenCustomMessages = () => {
     cometChat.addMessageListener(
       user.id,
       new cometChat.MessageListener({

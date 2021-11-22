@@ -1,12 +1,9 @@
 import { useEffect, useRef, useContext } from "react";
-
 import validator from "validator";
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-
 import withModal from "../common/Modal";
 import SignUp from "../register/SignUp";
-
 import Context from "../../context";
 
 const Login = (props) => {
@@ -24,7 +21,7 @@ const Login = (props) => {
     if (authenticatedUser) { 
       history.push('/');
     }
-  }, []);
+  }, [history]);
 
   const getInputs = () => {
     const email = emailRef.current.value;

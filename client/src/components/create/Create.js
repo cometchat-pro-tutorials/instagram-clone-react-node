@@ -61,18 +61,14 @@ const Create = (props) => {
         <div className="create-post__container">
           <div className="create-post__title">Create new post</div>
           <div className="create-post__close">
-            <img
-              alt="close"
-              onClick={() => toggleModal(false)}
-              src="https://static.xx.fbcdn.net/rsrc.php/v3/y2/r/__geKiQnSG-.png"
-            />
+            <img alt="close" onClick={() => toggleModal(false)} src="https://static.xx.fbcdn.net/rsrc.php/v3/y2/r/__geKiQnSG-.png" />
           </div>
         </div>
         <div className="create-post__subtitle"></div>
         <div className="create-post__form">
           {postImage && <div className="create-post__image" onClick={() => filepickerRef.current.click()}>
             <div>
-              <img src={postImage} />
+              <img src={postImage} alt="post-content" />
             </div>
           </div>}
           {!postImage && <div onClick={() => filepickerRef.current.click()} className="create-post__image-picker">

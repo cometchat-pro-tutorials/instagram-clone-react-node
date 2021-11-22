@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 import Header from '../common/Header';
 import Posts from '../post/Posts';
@@ -9,21 +9,23 @@ const Home = () => {
 
   const { setIsLoading, hasNewPost, setHasNewPost } = useContext(Context);
 
-  useEffect(async () => {
-    await loadPosts();
+  let loadPosts = null;
+
+  useEffect(() => {
+    loadPosts();
     return () => {
       setPosts([]);
     }
-  }, []);
+  }, [loadPosts]);
 
   useEffect(() => {
     if (hasNewPost) {
       loadPosts();
       setHasNewPost(false);
     }
-  }, [hasNewPost]);
+  }, [hasNewPost, loadPosts, setHasNewPost]);
 
-  const loadPosts = async () => {
+  loadPosts = useCallback(async () => {
     try {
       setIsLoading(true);
       const url = 'http://localhost:8080/posts';
@@ -33,7 +35,7 @@ const Home = () => {
     } catch (error) {
       setIsLoading(false);
     }
-  };
+  }, [setIsLoading]);
   
   return (
     <div>

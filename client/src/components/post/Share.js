@@ -1,18 +1,21 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 import Detail from './Detail';
 import Context from '../../context';
 
 const Share = (props) => {
+  const params = props.match.params;
   const [hasPost, setHasPost] = useState(false);
   const { setIsLoading, setSelectedPost } = useContext(Context);
 
-  useEffect(async () => {
-    await loadPost();
-  }, []);
+  let loadPost = null;
 
-  const loadPost = async () => {
-    const postId = props.match.params.id;
+  useEffect(() => {
+    loadPost();
+  }, [loadPost]);
+
+  loadPost = useCallback(async () => {
+    const postId = params.id;
     if (!postId) {
       return;
     }
@@ -31,7 +34,7 @@ const Share = (props) => {
     } catch (error) {
       setIsLoading(false);
     }
-  };
+  }, [setIsLoading, params, setSelectedPost]);
 
   if (!hasPost) {
     return <></>;

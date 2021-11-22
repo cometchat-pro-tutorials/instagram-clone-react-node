@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import axios from 'axios';
 import Header from '../common/Header';
 import Notification from './Notification';
@@ -9,11 +9,13 @@ const Notifications = () => {
 
   const { user, setIsLoading } = useContext(Context);
 
-  useEffect(async () => {
-    await loadNotifications();
-  }, [])
+  let loadNotifications = null;
 
-  const loadNotifications = async () => {
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications])
+
+  loadNotifications = useCallback(async () => {
     try {
       setIsLoading(true);
       const url = `http://localhost:8080/notifications/${user.id}`;
@@ -23,7 +25,7 @@ const Notifications = () => {
     } catch (error) {
       setIsLoading(false);
     }
-  };
+  }, [setIsLoading, user]);
 
   const renderNotifications = () => {
     if (!notifications || !notifications.length) {
