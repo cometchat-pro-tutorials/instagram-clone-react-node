@@ -1,16 +1,15 @@
 require("dotenv").config();
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const express = require("express");
 const multer = require("multer");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const path = require("path");
 const PORT = process.env.PORT || 8080;
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 

@@ -19,7 +19,7 @@ This demo uses:
 - Node.js
 - Express.js
 - MySQL
-- Body-parser
+- 
 - Cors
 - Dotenv
 - Nodemon
@@ -36,7 +36,7 @@ To run the demo follow these steps:
 6. Navigate to the Users tab, and delete all the default users and groups leaving it clean **(very important)**.
 7. Download the repository [here](https://github.com/hieptl/instagram-clone-react-node/archive/main.zip) or by running `git clone https://github.com/hieptl/instagram-clone-react-node.git` and open it in a code editor.
 9. Create a file called **.env** in the root folder of your project.
-10. Import and inject your secret keys in the **.env** file containing your CometChat in this manner.
+10. The content of the **.env** file should be as follow.
 
 ```js
 REACT_APP_COMETCHAT_APP_ID=xxx-xxx-xxx-xxx-xxx-xxx-xxx-xxx
@@ -56,7 +56,7 @@ REACT_APP_COMETCHAT_AUTH_KEY=xxx-xxx-xxx-xxx-xxx-xxx-xxx-xxx
 
 To run the demo follow these steps:
 
-1. We will use the MySQL database. For this reason, this section describes how to create the database and its table. Before proceeding, you need to make sure that you have installed the MySQL database on your computer already. To create the database and its table, you need to get the tinder_clone.sql and run it.
+1. We will use the MySQL database. For this reason, this section describes how to create the database and its table. Before proceeding, you need to make sure that you have installed the MySQL database on your computer already. To create the database and its table, you need to get the instagram.sql and run it.
 2. Create .env file and replace the below information with the information of your database connection.
 ```js
 PORT=xxx - xxx - xxx - xxx - xxx - xxx - xxx - xxx

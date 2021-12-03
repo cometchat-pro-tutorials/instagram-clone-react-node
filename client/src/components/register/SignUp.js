@@ -87,7 +87,7 @@ function SignUp(props) {
       if (response && response.data.message) { 
         alert(response.data.message);
       } else {
-        const createdAccount = await createCometChatAccount({ userUuid, fullname, avatar: `http://localhost:8080/${response.avatar}` });
+        const createdAccount = await createCometChatAccount({ userUuid, fullname, avatar: `http://localhost:8080/${response.data.avatar}` });
         if (createdAccount) {
           alert(`${email} was created successfully! Please sign in with your created account`);
         }
