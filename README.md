@@ -19,7 +19,6 @@ This demo uses:
 - Node.js
 - Express.js
 - MySQL
-- 
 - Cors
 - Dotenv
 - Nodemon
